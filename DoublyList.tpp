@@ -30,7 +30,24 @@ DoublyList<T>::~DoublyList() {
 
 template <typename T>
 void DoublyList<T>::append(const T& elem) {
-    // TO DO: Implement the code for the append
+    // TODO: Implement the code for the append
+    Node* n = new Node(elem);
+
+    if (head == nullptr) {
+        head = n;
+    }
+    else {
+        Node* curr = head;
+
+        while (curr->next != nullptr) {
+            curr = curr->next;
+        }
+
+        curr->next = n;
+        n->prev = curr;
+    }
+
+    this->length++;
 
 }
 
@@ -77,7 +94,31 @@ int DoublyList<T>::getLength() const {
 
 template <typename T>
 void DoublyList<T>::insert(int position, const T& elem) {
-  // TO DO: Implement code to insert an element to list
+    // TODO: Implement code to insert an element to list
+
+    if(position < 0 || this->length < position){
+        throw string ("Error insert: position out of bounds");
+    } 
+
+    Node* ins = new Node;
+    ins->value = elem;
+
+    if(position == 0){
+        ins->next = head;
+        head = ins;
+    }
+    else{
+        Node* p = head;
+        for (int i = 0; i < position - 1; ++i) {
+            p = prev->next;  // safe because position <= length
+        }
+        ins->next = p->next;
+        p->next = ins;
+        ins->prev = p;
+        ins->next->prev = ins;
+    }
+
+    this->length += 1;
 }
 
 template <typename T>
@@ -89,18 +130,73 @@ bool DoublyList<T>::isEmpty() const {
 
 template <typename T>
 void DoublyList<T>::remove(int position) {
-    // TO DO: Implement code to remove element at given position
+    // TODO: Implement code to remove element at given position
+
+    if(head == nullptr && position >= 0){
+        throw string ("Error remove: Linked List empty");
+    } 
+    else if(position < 0){
+        throw string ("Error remove: position out of bounds");
+    }
+
+    if(position == 0){
+        Node* del = head;
+        head = head->next;
+        delete del;
+        return;
+    }
+
+    //creates a ptr and makes if go the node before position
+    Node* p = head;
+    for(int i = 0; i < position - 1; ++i){
+        if(p->next == nullptr){
+            throw string ("Error remove: position out of bounds");
+        }
+        p = p->next;
+    }
+
+    if(p->next == nullptr){
+        throw string ("Error remove: position out of bounds");
+    }
+
+    Node * del = p->next;
+    delete del;
+
+    p->next = nullptr;
+    
 }
 
 template <typename T>
 bool DoublyList<T>::search(const T& elem) const {
-    // TO DO: Implement code to search for element
+    // TODO: Implement code to search for element
+
+    bool ret = false;
+    Node* ptr = head;
+
+    if(head->val == elem) return true;
+
+    while(!ret && ptr->next != nullptr){
+        if (ptr->val == elem){
+            ret = true;
+        }
+        else{
+            ptr = next->ptr;
+        }
+    }
     return false;
 }
 
 template <typename T>
 void DoublyList<T>::replace(int position, const T& elem) {
-    // TO DO: Add code for replace method
+    // TODO: Add code for replace method
+
+    Node* ptr = head;
+
+    for(int i = 0; i < position; ++i){
+       ptr = ptr->next; 
+    }
+
+    ptr->val = elem;
 }
 
 template <typename T>
